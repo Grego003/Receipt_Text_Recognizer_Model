@@ -1,0 +1,16 @@
+names:
+- date_time
+- item
+- receipt
+- shop
+- total
+nc: 5
+roboflow:
+  license: Private
+  project: renote
+  url: https://app.roboflow.com/receipt-dataset-awcrq/renote/10
+  version: 10
+  workspace: receipt-dataset-awcrq
+test: ../test/images
+train: ../train/images
+val: ../valid/images
