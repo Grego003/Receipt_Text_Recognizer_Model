@@ -144,5 +144,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-/ReNote-10/*
-Pipfile
+/ReNote-14/*
+/ReNote-15/*
+/runs/*
+.Pipfile
+/ReNote-Polygon-1/*
+*.pt
