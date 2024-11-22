@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['date_time', 'item', 'receipt', 'shop', 'total']
+
+roboflow:
+  workspace: receipt-dataset-awcrq
+  project: renote-polygon
+  version: 17
+  license: Private
+  url: https://app.roboflow.com/receipt-dataset-awcrq/renote-polygon/17
