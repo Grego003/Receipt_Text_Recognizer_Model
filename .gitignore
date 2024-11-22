@@ -147,6 +147,7 @@ cython_debug/
 /ReNote-14/*
 /ReNote-15/*
 /runs/*
-.Pipfile
-/ReNote-Polygon-1/*
+/Pipfile
+/Pipfile.lock
+/ReNote-Polygon-4/*
 *.pt
