@@ -150,4 +150,5 @@ cython_debug/
 /Pipfile
 /Pipfile.lock
 /ReNote-Polygon-4/*
+/ReNote-Polygon-17/*
 *.pt
