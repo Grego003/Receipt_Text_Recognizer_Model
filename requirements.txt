@@ -1,8 +1,0 @@
-kagglehub==0.3.4
-matplotlib==3.7.2
-numpy==1.25.2
-pandas==2.0.3
-Pillow==11.0.0
-python-dotenv==1.0.1
-roboflow==1.1.49
-ultralytics==8.3.29
