@@ -153,3 +153,5 @@ cython_debug/
 
 **/dataset/train
 **/dataset/test
+
+**/trained_models/YOLO
