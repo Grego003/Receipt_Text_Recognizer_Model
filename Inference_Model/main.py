@@ -60,7 +60,7 @@ def read_root():
                 <h2>Example Request:</h2>
                 <pre>
                 {
-                    "image_path": "sample_image/8.jpg",
+                    "image_path": "sample_image/8.jpg"
                 }
                 </pre>
                 <h2>Response:</h2>
