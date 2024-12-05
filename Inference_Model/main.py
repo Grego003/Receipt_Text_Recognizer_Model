@@ -1,56 +1,103 @@
-import os
-import argparse
+from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+from pydantic import BaseModel
 from inference.InferenceModel import InferenceModel
+from fastapi.responses import HTMLResponse
+import os
+
+# Paths to models
+YOLO_MODEL_PATH = "./trained_models/YOLO/model_train_renfred_1/weights/best.pt"
+OCR_BEST_WEIGHTS = "./trained_models/OCR/CRNN_MODEL_GregoV1/weight/best_weight.keras"
+CONF_LIMIT = 0.5
+model = None
 
 
-TRAINED_MODEL_DIR = "./trained_models"
-
-YOLO_MODEL_DIR = os.path.join(TRAINED_MODEL_DIR, "YOLO")
-YOLO_BEST_MODEL = os.path.join("model_train_renfred_1", "weights", "best.pt")
-YOLO_MODEL_PATH = os.path.join(YOLO_MODEL_DIR, YOLO_BEST_MODEL)
-
-OCR_MODEL_DIR = os.path.join(TRAINED_MODEL_DIR, "OCR")
-OCR_BEST_MODEL = os.path.join("CRNN_Model_AgusV3", "model", "CRNN_Model_AgusV3.keras")
-OCR_BEST_WEIGHTS = os.path.join(
-    OCR_MODEL_DIR, "CRNN_Model_augmented", "weight", "best_weight.keras"
-)
-OCR_MODEL_PATH = os.path.join(OCR_MODEL_DIR, OCR_BEST_MODEL)
-
-SAMPLE_IMAGE_PATH = os.path.join("./sample_image")
+class PredictRequest(BaseModel):
+    image_path: str
 
 
-def predict(image_path, conf_limit=0.5, use_augment=False):
-    model = InferenceModel(YOLO_MODEL_PATH, OCR_BEST_WEIGHTS, conf_limit, use_augment)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    print("Loading the model...")
+    try:
+        model = InferenceModel(YOLO_MODEL_PATH, OCR_BEST_WEIGHTS, CONF_LIMIT, False)
+        print("Model loaded successfully!")
+        yield
+    except Exception as e:
+        print(f"Error during model initialization: {e}")
+        raise HTTPException(status_code=500, detail="Failed to initialize the model.")
+    finally:
+        print("Cleaning up resources...")
+        del model
+        print("Resources cleaned up!")
 
-    # Run inference on the provided image
-    result = model.predict(image_path)
 
-    return result
+app = FastAPI(lifespan=lifespan)
+
+# ROUTES ==================================================================================
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Command-line tool for predicting Receipts."
-    )
-    subparsers = parser.add_subparsers(dest="command", help="Available commands")
-    predict_parser = subparsers.add_parser("predict", help="Run inference on a receipt")
+@app.get("/", response_class=HTMLResponse)
+def read_root():
+    return """
+    <html>
+        <head>
+            <title>API for Predicting Receipts to Text</title>
+        </head>
+        <body>
+            <h1>API for Predicting Receipts to Text</h1>
+            <p>This API helps you to predict and extract text from receipt images using deep learning models.</p>
+            <h2>Endpoints:</h2>
+            <ul>
+                <li><b>POST /predict/</b>: Predict text from a receipt image.</li>
+            </ul>
+            <h2>Parameters:</h2>
+            <ul>
+                <li><b>image_path</b> (str): Path to the image of the receipt.</li>
+            </ul>
+            <div>
+                <h2>Example Request:</h2>
+                <pre>
+                {
+                    "image_path": "sample_image/8.jpg",
+                }
+                </pre>
+                <h2>Response:</h2>
+                <pre>
+                {
+                    "success": true,
+                    "result": {
+                        "item": [
+                            "COCA COLA  1.0M",
+                            "KATSU 3  2.0M",
+                        ],
+                        "total": "412.400",
+                        "date_time": "12/05/2024",
+                        "shop": "WARUNG PASTA"
+                    }
+                }
+                </pre> 
+            </div>
+        </body>
+    </html>
+    """
 
-    predict_parser.add_argument("image_path", type=str, help="Path to the input image")
 
-    predict_parser.add_argument(
-        "--conf_limit",
-        type=float,
-        default=0.5,
-        help="Confidence limit for predictions (default: 0.5)",
-    )
-    predict_parser.add_argument(
-        "--use_augment", action="store_true", help="Enable augmentation for inference"
-    )
+@app.post("/predict/")
+async def predict(request: PredictRequest):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model is not loaded")
 
-    args = parser.parse_args()
+    normalized_path = os.path.normpath(request.image_path)
 
-    if args.command == "predict":
-        result = predict(args.image_path, args.conf_limit, args.use_augment)
-        print(result)
-    else:
-        parser.print_help()
+    if not os.path.exists(normalized_path):
+        raise HTTPException(
+            status_code=404, detail=f"{request.image_path} is not found"
+        )
+
+    try:
+        result = model.predict(image_path=normalized_path)
+        return {"success": True, "result": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

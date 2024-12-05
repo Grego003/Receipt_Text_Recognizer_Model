@@ -3,7 +3,6 @@ import time
 start_time = time.time()
 
 import tensorflow as tf
-
 from mltu.utils.text_utils import ctc_decoder
 
 print(f"Ocr import time: {time.time() - start_time:.2f} seconds")

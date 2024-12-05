@@ -2,6 +2,7 @@ import time
 
 start_time = time.time()
 
+from ultralytics import YOLO
 import matplotlib.pyplot as plt
 import cv2
 
@@ -17,18 +18,17 @@ class YoloInferenceData:
 
 class YoloInferenceModel:
     def __init__(self, model_path, conf_limit=0.5):
-        from ultralytics import YOLO
 
         self.model = YOLO(model_path, task="segment")
         self.conf_limit = conf_limit
         self.singleton_class = ["total", "receipt", "shop", "date_time", "item_labels"]
-        self.detection_boxes = []
-
-        self.cropped_images = {}
         self.original_image = []
         self.mask = {}
 
     def process_image(self, image):
+        self.cropped_images = {}
+        self.original_image = []
+        self.detection_boxes = []
         singleton_class_items = {}
         if image.shape[-1] == 4:  # Check if the image has 4 channels (RGBA)
             image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)

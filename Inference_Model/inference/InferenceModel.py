@@ -13,20 +13,19 @@ class InferenceModel:
     def __init__(
         self, yolo_model_path, ocr_weights_path, conf_limit=0.5, use_augments=False
     ):
-        self.yolo_model_path = yolo_model_path
-        self.ocr_weights_path = ocr_weights_path
-        self.conf_limit = conf_limit
-        self.use_augments = use_augments
         self.yolo_model = None
         self.ocr_model = None
+        self.conf_limit = conf_limit
+        self.use_augments = use_augments
+        self.initialize_models(yolo_model_path, ocr_weights_path)
 
-    def initialize_models(self):
+    def initialize_models(self, yolo_model_path, ocr_weights_path):
         if self.yolo_model is None:
             self.yolo_model = YoloInferenceModel(
-                self.yolo_model_path, conf_limit=self.conf_limit
+                yolo_model_path, conf_limit=self.conf_limit
             )
         if self.ocr_model is None:
-            self.ocr_model = OcrInferenceModel(self.ocr_weights_path)
+            self.ocr_model = OcrInferenceModel(ocr_weights_path)
 
     def augment_image(self, image):
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -71,6 +70,7 @@ class InferenceModel:
         return processed_results
 
     def validate_cropped_image(self):
+        print("error here!")
         return "receipt" in self.process_cropped_images()
 
     def process_text(self, data):
@@ -111,23 +111,23 @@ class InferenceModel:
         else:
             processed_data["total"] = ""
 
-        return json.dumps(processed_data, indent=4)
+        return processed_data
 
     def predict(self, image_path):
-        self.initialize_models()
         image = Image.open(image_path)
-        # bg removed image
-        # image = remove(image)
         numpy_image = np.array(image)
 
         self.cropped_images = self.yolo_model.process_image(numpy_image)
+        print(f"cropped_image len: {len(self.cropped_images)}")
 
         if not self.validate_cropped_image():
             not_found_response = {"status": "error", "message": "Receipt not found"}
-            return json.dumps(not_found_response, indent=4)
+            return not_found_response
 
         final_result = self.process_cropped_images()
         final_result_json = self.result_to_json(final_result)
         processed_text = self.process_text(final_result_json)
+
+        print(f"processed_text: {processed_text}")
 
         return processed_text
