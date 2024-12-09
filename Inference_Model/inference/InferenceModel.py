@@ -75,7 +75,7 @@ class InferenceModel:
 
     def process_text(self, data):
         def clean_text(text):
-            cleaned_text = re.sub(r"\[START\]|\[END\]", "", text)
+            cleaned_text = re.sub(r"\[START\]|\[END\]|\[UNK\]", "", text)
             return cleaned_text.strip()
 
         processed_data = {}

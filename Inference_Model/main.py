@@ -7,8 +7,8 @@ import os
 
 # Paths to models
 YOLO_MODEL_PATH = "./trained_models/YOLO/model_train_renfred_1/weights/best.pt"
-OCR_BEST_WEIGHTS = "./trained_models/OCR/CRNN_MODEL_GregoV1/weight/best_weight.keras"
-CONF_LIMIT = 0.5
+OCR_BEST_WEIGHTS = "./trained_models/OCR/CRNN_MODEL_Agus_V1/weight/best_weight.keras"
+CONF_LIMIT = 0.3
 model = None
 
 
