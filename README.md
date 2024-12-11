@@ -144,16 +144,9 @@ Follow these steps to clone the repository and set up the environment:
 ## 📱 Contact 
 
 * Agustinus : [Linkedin](https://www.linkedin.com/in/agustinus-tech)
-</br>
-
 * Renfred Leeman : [Linkedin](https://www.linkedin.com/in/renfred-leeman)
-</br>
-
 * Gregorius Ivan Halim: [Linkedin](https://www.linkedin.com/in/gregorius-ivan-halim-58365421a/)
-</br>
-
 * ReNote Machine learning Team : [Github](https://github.com/Grego003/Receipt_Text_Recognizer_Model)
-
 
 <p align="right">(<a href="#renote-top">back to top</a>)</p>
 
