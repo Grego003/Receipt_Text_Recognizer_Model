@@ -58,6 +58,7 @@ Before setting up the project, ensure you have the following installed on your s
 * **Python 3.11 or lower**: [Download Python](https://www.python.org/downloads/)
 * **Conda (Anaconda/Miniconda)**: [Download Conda](https://docs.conda.io/en/latest/miniconda.html)
 * **Git**: [Download Git](https://git-scm.com/downloads)
+* **Google Drive**: [Download Google Drive](https://https://drive.google.com/drive/folders/1gLAUvi3ZRD5bvERJO5ZjPGWa4AiHaQSD?usp=sharing)
 
 ### 💻 Installation
 
