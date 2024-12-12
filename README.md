@@ -91,6 +91,17 @@ Follow these steps to clone the repository and set up the environment:
    pipenv shell
    ```
 
+   **Extract Pre-Train Model Path:**
+   After you download the pretrained model from your drive YOLO (model_train_renfred_7) & OCR (keras_ocr_model) you need to insert it in the following path:
+   ```sh
+    .
+    ├── Receipt_YOLO_Detection_Model
+    ├── Inference_Model                    
+    │   ├── trained_models       
+    │   ├──── OCR     # Put the file downloaded for OCR Model Here
+    │   └──── YOLO    # Put the file downloaded for YOLO Model Here       
+    └── ...
+
 4. **Install the required Python packages**
    Run the following command to install dependencies listed in `requirements.txt`:
    ```sh
